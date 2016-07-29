@@ -1,7 +1,10 @@
-#include <iostream>
-#include <cstring>
+#define _GNU_SOURCE
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <signal.h>
 #include <unistd.h>
+#include <sched.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
 #include <sys/syscall.h>
@@ -9,6 +12,7 @@
 /*
  * Copied from linux/include/linux/isolation.h
  */
+
 /* Enable/disable or query task_isolation mode for TASK_ISOLATION kernels. */
 #define PR_SET_TASK_ISOLATION		48
 #define PR_GET_TASK_ISOLATION		49
@@ -18,8 +22,6 @@
 # define PR_TASK_ISOLATION_GET_SIG(bits) (((bits) >> 8) & 0x7f)
 # define PR_TASK_ISOLATION_NOSIG \
     (PR_TASK_ISOLATION_USERSIG | PR_TASK_ISOLATION_SET_SIG(0))
-
-using namespace std;
 
 int gettid()
 {
@@ -42,7 +44,7 @@ int main(int argc, char *argv[])
     (void) argc; (void) argv;
     cpu_set_t cpuset;
 
-    cout << "taskisol run" << endl;
+    printf("taskisol run\n");
 
     signal(SIGUSR1, sigusr1);
 
@@ -52,7 +54,7 @@ int main(int argc, char *argv[])
 
     mlockall(MCL_CURRENT);
 
-    char *addr = (char *) mmap(nullptr, 4096, PROT_READ | PROT_WRITE,
+    char *addr = (char *) mmap(NULL, 4096, PROT_READ | PROT_WRITE,
                       MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (!addr) {
         perror("addr");
