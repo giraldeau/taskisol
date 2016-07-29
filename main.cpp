@@ -30,7 +30,8 @@ void sigusr1(int signo)
 {
     (void) signo;
     const char *msg = "sigusr\n";
-    write(2, msg, strlen(msg));
+    int ret = write(2, msg, strlen(msg));
+    (void) ret;
     exit(0);
 }
 
@@ -90,7 +91,8 @@ int main(int argc, char *argv[])
              * stdout as normal
              */
             const char *msg = "hallo\n";
-            write(2, msg, strlen(msg));
+            int ret = write(2, msg, strlen(msg));
+            (void) ret;
         }
 
         if (strcmp(argv[2], "pagefault") == 0) {
